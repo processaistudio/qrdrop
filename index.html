@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="QR Drop: passa fitxers del PC a qualsevol dispositiu amb càmera (mòbil, tauleta, iPad, Android) amb un QR. Sense comptes, sense núvol i, quan cal, sense cap Wi-Fi.">
+<title>QR Drop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#f6f6f4; --ink:#151517; --ink-2:#3a3a40; --mute:#6b6b72; --line:#dcdce1; --panel:#ffffff;
+  --accent:#1f4fd8; --accent-ink:#ffffff; --band:#151517; --band-ink:#f2f2ef; --band-mute:#a3a3ab; --ok:#1d7a3e;
+  --display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121214; --ink:#ececee; --ink-2:#c9c9cf; --mute:#8f8f98; --line:#2a2a31; --panel:#1a1a1e;
+  --accent:#7aa2ff; --accent-ink:#0f1a3a; --band:#e9e9e4; --band-ink:#151517; --band-mute:#5a5a62; --ok:#5fbf7a;
+}}
+:root[data-theme="dark"]{
+  --paper:#121214; --ink:#ececee; --ink-2:#c9c9cf; --mute:#8f8f98; --line:#2a2a31; --panel:#1a1a1e;
+  --accent:#7aa2ff; --accent-ink:#0f1a3a; --band:#e9e9e4; --band-ink:#151517; --band-mute:#5a5a62; --ok:#5fbf7a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,7vw,68px);font-weight:800}
+h2{font-size:clamp(28px,4vw,40px)}
+h3{font-size:19px;line-height:1.3}
+p{margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600;font-size:16px;border:0;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.fine{font-size:13px;color:var(--mute)}
+
+/* capçalera */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:20px;text-decoration:none}
+.brand svg{width:22px;height:22px}
+.top nav{display:flex;gap:22px;font-size:14px;font-weight:500}
+.top nav a{text-decoration:none;color:var(--ink-2)}
+.top nav a:hover{color:var(--ink)}
+@media (max-width:640px){.top nav{display:none}}
+
+/* portada */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-block:72px 64px}
+.hero .lead{font-size:20px;color:var(--ink-2);max-width:34ch;margin-top:22px}
+.hero h1{margin-top:14px}
+.cta{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:32px}
+@media (max-width:820px){.hero{grid-template-columns:1fr;padding-block:48px 40px}}
+
+/* la il·lustració: la pàgina de QR Drop al PC i el dispositiu que rep */
+.art{position:relative;margin:0;max-width:100%}
+.pc{background:var(--panel);border:1px solid var(--line);padding:18px 18px 20px;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.pc .bar{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;color:var(--mute);padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.pc .file{font-weight:600;font-size:15px;text-align:center}
+.pc .sub{font-size:12px;color:var(--mute);text-align:center;margin-top:2px}
+.qr{display:block;width:min(100%,280px);aspect-ratio:1/1;height:auto;margin:16px auto 0;color:var(--ink)}
+.dev{position:absolute;right:-8px;bottom:-26px;width:min(62%,230px);background:var(--panel);border:1.5px solid var(--ink);padding:12px 14px;box-shadow:0 20px 40px -30px rgba(0,0,0,.6)}
+.dev .who{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.dev .got{margin-top:6px;font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.dev .got b{color:var(--ok);font-weight:600}
+@media (max-width:820px){.dev{position:static;width:100%;margin-top:12px}}
+
+section{padding-block:72px;border-top:1px solid var(--line)}
+section .intro{max-width:56ch;color:var(--ink-2);font-size:18px;margin-top:14px}
+
+/* passos: seqüència real, per això numerada */
+.steps{list-style:none;padding:0;margin:40px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:pas}
+.steps li{counter-increment:pas;display:grid;gap:10px;border-top:2px solid var(--ink);padding-top:16px;align-content:start}
+.steps li::before{content:counter(pas,decimal-leading-zero);font-family:var(--display);font-weight:800;font-size:34px;line-height:1;letter-spacing:-.02em}
+.steps p{color:var(--ink-2);font-size:15px}
+@media (max-width:720px){.steps{grid-template-columns:1fr;gap:24px}}
+.also{margin-top:28px;font-size:15px;color:var(--mute);max-width:60ch}
+
+/* la franja invertida: l'argument */
+.band{background:var(--band);color:var(--band-ink);border-top:0}
+.band .eyebrow{color:var(--band-mute)}
+.band .intro{color:var(--band-ink)}
+.places{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px}
+.places div{border-top:1px solid var(--band-mute);padding-top:14px}
+.places h3{margin-bottom:8px}
+.places p{font-size:15px;color:var(--band-mute)}
+.band .how{margin-top:44px;padding:20px 22px;background:color-mix(in srgb,var(--band-ink) 8%,transparent);max-width:64ch;font-size:15px}
+@media (max-width:720px){.places{grid-template-columns:1fr}}
+
+/* preu: una comparació en dues columnes, no dues targetes */
+.plans{display:grid;grid-template-columns:1fr 1fr;margin-top:40px;border:1px solid var(--line)}
+.plan{padding:28px 26px 30px;display:flex;flex-direction:column}
+.plan + .plan{border-left:1px solid var(--line)}
+.plan.pro{background:var(--panel)}
+.plan .name{font-family:var(--display);font-weight:700;font-size:22px}
+.plan .price{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;margin-top:10px;letter-spacing:-.02em}
+.plan .price small{font-family:var(--body);font-weight:500;font-size:14px;letter-spacing:0;color:var(--mute);margin-left:8px}
+.plan ul{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:10px;font-size:15px}
+.plan li{display:flex;gap:10px}
+.plan li::before{content:"✓";color:var(--ok);font-weight:700;flex:none}
+.plan li.plus::before{color:var(--accent)}
+.plan .btn{margin-top:auto;align-self:flex-start;margin-block-start:26px}
+.plan .note{margin-top:14px;font-size:13px;color:var(--mute)}
+@media (max-width:720px){.plans{grid-template-columns:1fr}.plan + .plan{border-left:0;border-top:1px solid var(--line)}}
+
+/* activació */
+.code{font-family:var(--mono);font-size:14px;background:var(--panel);border:1px solid var(--line);padding:2px 8px;white-space:nowrap}
+
+/* privadesa */
+.priv{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px}
+.priv p{font-size:15px;color:var(--ink-2)}
+.priv h3{margin-bottom:6px}
+@media (max-width:720px){.priv{grid-template-columns:1fr}}
+
+/* preguntes */
+.faq{margin-top:28px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;padding:18px 0;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--mute);flex:none}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding-bottom:20px;color:var(--ink-2);max-width:64ch;font-size:15px}
+
+footer{border-top:1px solid var(--line);padding-block:28px 40px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mute)}
+footer a{color:var(--mute)}
+
+@media (prefers-reduced-motion:no-preference){
+  .hero > *{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+  .hero > :nth-child(2){animation-delay:.12s}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+
+
+<header class="wrap top">
+  <a class="brand" href="#top" aria-label="QR Drop">
+    <svg viewBox="0 0 9 9" aria-hidden="true"><path fill="currentColor" d="M0 0h3v3H0zM1 1h1v1H1zM6 0h3v3H6zM7 1h1v1H7zM0 6h3v3H0zM1 7h1v1H1zM4 0h1v1H4zM4 2h1v1H4zM3 4h1v1H3zM5 4h1v1H5zM7 4h1v1H7zM4 6h1v1H4zM6 6h1v1H6zM8 8h1v1H8zM4 8h1v1H4zM6 8h1v1H6zM8 6h1v1H8zM0 4h1v1H0zM2 4h1v1H2z"/></svg>
+    QR Drop
+  </a>
+  <nav>
+    <a href="#com-funciona">Com funciona</a>
+    <a href="#sense-wifi">Sense cap Wi-Fi</a>
+    <a href="#preu">Preu</a>
+    <a href="#preguntes">Preguntes</a>
+  </nav>
+  <a class="btn" href="https://github.com/processaistudio/qrdrop/releases/download/v1.0.0/QRDrop-Setup-1.0.0.exe">Descarrega</a>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">Per a Windows 10 i 11 · versió 1.0.0</p>
+      <h1>Del PC a qualsevol dispositiu amb un QR.</h1>
+      <p class="lead">Deixa-hi el fitxer, escaneja el codi amb la càmera del mòbil, la tauleta o l'iPad, i ja el tens. Sense comptes, sense núvol i, quan cal, sense cap Wi-Fi.</p>
+      <div class="cta">
+        <a class="btn" href="https://github.com/processaistudio/qrdrop/releases/download/v1.0.0/QRDrop-Setup-1.0.0.exe">Descarrega per a Windows</a>
+        <span class="fine">Gratis · 29 MB · Al mòbil o la tauleta no s'hi instal·la res · Sense registre</span>
+      </div>
+    </div>
+    <figure class="art">
+      <div class="pc">
+        <div class="bar"><span>QR Drop</span><span>192.168.137.1</span></div>
+        <p class="file">Apunts tema 4.pdf</p>
+        <p class="sub">1,3 MB · Escaneja amb la càmera de l'altre dispositiu</p>
+        <svg class="qr" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="Codi QR d'exemple: si l'escaneges, diu de què va QR Drop"><path fill="currentColor" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM11 0h1v1h-1zM12 0h1v1h-1zM13 0h1v1h-1zM14 0h1v1h-1zM15 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM25 0h1v1h-1zM27 0h1v1h-1zM28 0h1v1h-1zM30 0h1v1h-1zM31 0h1v1h-1zM32 0h1v1h-1zM33 0h1v1h-1zM34 0h1v1h-1zM35 0h1v1h-1zM36 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM15 1h1v1h-1zM16 1h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM19 1h1v1h-1zM21 1h1v1h-1zM22 1h1v1h-1zM23 1h1v1h-1zM25 1h1v1h-1zM26 1h1v1h-1zM28 1h1v1h-1zM30 1h1v1h-1zM36 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM10 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM27 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h1v1h-1zM33 2h1v1h-1zM34 2h1v1h-1zM36 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM24 3h1v1h-1zM25 3h1v1h-1zM26 3h1v1h-1zM27 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM33 3h1v1h-1zM34 3h1v1h-1zM36 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM33 4h1v1h-1zM34 4h1v1h-1zM36 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM33 6h1v1h-1zM34 6h1v1h-1zM35 6h1v1h-1zM36 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM19 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM24 7h1v1h-1zM28 7h1v1h-1zM0 8h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM11 8h1v1h-1zM14 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM36 8h1v1h-1zM1 9h1v1h-1zM4 9h1v1h-1zM5 9h1v1h-1zM9 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM27 9h1v1h-1zM28 9h1v1h-1zM32 9h1v1h-1zM33 9h1v1h-1zM34 9h1v1h-1zM0 10h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM23 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM35 10h1v1h-1zM0 11h1v1h-1zM1 11h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM35 11h1v1h-1zM36 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM17 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM26 12h1v1h-1zM29 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM0 13h1v1h-1zM1 13h1v1h-1zM3 13h1v1h-1zM5 13h1v1h-1zM9 13h1v1h-1zM10 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM32 14h1v1h-1zM33 14h1v1h-1zM34 14h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM7 15h1v1h-1zM8 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM28 15h1v1h-1zM32 15h1v1h-1zM34 15h1v1h-1zM0 16h1v1h-1zM1 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM21 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM35 16h1v1h-1zM36 16h1v1h-1zM0 17h1v1h-1zM1 17h1v1h-1zM2 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM16 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM23 17h1v1h-1zM25 17h1v1h-1zM26 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM32 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM3 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM33 18h1v1h-1zM34 18h1v1h-1zM1 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM10 19h1v1h-1zM13 19h1v1h-1zM17 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM27 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM34 19h1v1h-1zM0 20h1v1h-1zM1 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM33 20h1v1h-1zM36 20h1v1h-1zM1 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM16 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM21 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM28 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM35 21h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM15 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM23 22h1v1h-1zM25 22h1v1h-1zM27 22h1v1h-1zM28 22h1v1h-1zM30 22h1v1h-1zM33 22h1v1h-1zM34 22h1v1h-1zM0 23h1v1h-1zM3 23h1v1h-1zM5 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM19 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM30 23h1v1h-1zM34 23h1v1h-1zM35 23h1v1h-1zM0 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM10 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM31 24h1v1h-1zM33 24h1v1h-1zM34 24h1v1h-1zM36 24h1v1h-1zM0 25h1v1h-1zM2 25h1v1h-1zM3 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM29 25h1v1h-1zM31 25h1v1h-1zM32 25h1v1h-1zM35 25h1v1h-1zM36 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM7 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM21 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM27 26h1v1h-1zM32 26h1v1h-1zM34 26h1v1h-1zM4 27h1v1h-1zM8 27h1v1h-1zM10 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM15 27h1v1h-1zM16 27h1v1h-1zM17 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM21 27h1v1h-1zM22 27h1v1h-1zM24 27h1v1h-1zM26 27h1v1h-1zM27 27h1v1h-1zM31 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM36 27h1v1h-1zM0 28h1v1h-1zM1 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM7 28h1v1h-1zM9 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM17 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM35 28h1v1h-1zM36 28h1v1h-1zM8 29h1v1h-1zM11 29h1v1h-1zM12 29h1v1h-1zM14 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM28 29h1v1h-1zM32 29h1v1h-1zM0 30h1v1h-1zM1 30h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM16 30h1v1h-1zM17 30h1v1h-1zM20 30h1v1h-1zM23 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM35 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM11 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM22 31h1v1h-1zM23 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM32 31h1v1h-1zM34 31h1v1h-1zM35 31h1v1h-1zM36 31h1v1h-1zM0 32h1v1h-1zM2 32h1v1h-1zM3 32h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM9 32h1v1h-1zM10 32h1v1h-1zM11 32h1v1h-1zM12 32h1v1h-1zM18 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h1v1h-1zM0 33h1v1h-1zM2 33h1v1h-1zM3 33h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM10 33h1v1h-1zM11 33h1v1h-1zM16 33h1v1h-1zM19 33h1v1h-1zM20 33h1v1h-1zM23 33h1v1h-1zM25 33h1v1h-1zM26 33h1v1h-1zM29 33h1v1h-1zM30 33h1v1h-1zM36 33h1v1h-1zM0 34h1v1h-1zM2 34h1v1h-1zM3 34h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM11 34h1v1h-1zM12 34h1v1h-1zM13 34h1v1h-1zM16 34h1v1h-1zM17 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM26 34h1v1h-1zM29 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1zM0 35h1v1h-1zM6 35h1v1h-1zM9 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM14 35h1v1h-1zM17 35h1v1h-1zM18 35h1v1h-1zM21 35h1v1h-1zM22 35h1v1h-1zM24 35h1v1h-1zM26 35h1v1h-1zM27 35h1v1h-1zM29 35h1v1h-1zM31 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM35 35h1v1h-1zM0 36h1v1h-1zM1 36h1v1h-1zM2 36h1v1h-1zM3 36h1v1h-1zM4 36h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM8 36h1v1h-1zM11 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM18 36h1v1h-1zM19 36h1v1h-1zM20 36h1v1h-1zM21 36h1v1h-1zM22 36h1v1h-1zM23 36h1v1h-1zM24 36h1v1h-1zM27 36h1v1h-1zM29 36h1v1h-1zM34 36h1v1h-1zM35 36h1v1h-1zM36 36h1v1h-1z"/></svg>
+      </div>
+      <div class="dev">
+        <div class="who">Mòbil · Navegador</div>
+        <div class="got"><span>Apunts tema 4.pdf</span><b>Rebut ✓</b></div>
+      </div>
+    </figure>
+  </div>
+
+  <section id="com-funciona">
+    <div class="wrap">
+      <p class="eyebrow">Com funciona</p>
+      <h2>Tres gestos. Cap configuració.</h2>
+      <ol class="steps">
+        <li><h3>Deixa-hi el fitxer</h3><p>Arrossega'l a QR Drop, o clic dret sobre el fitxer → Envia a → QR Drop. Qualsevol tipus. Amb el complet, també carpetes senceres.</p></li>
+        <li><h3>Escaneja el QR</h3><p>Amb la càmera del mòbil, la tauleta o l'iPad: qualsevol que en tingui. Surt un avís; el toques.</p></li>
+        <li><h3>Ja el tens</h3><p>S'obre al navegador del dispositiu: desa'l o obre'l amb l'app que vulguis. A la pantalla del PC apareix «Rebut ✓».</p></li>
+      </ol>
+      <p class="also">També al revés (del dispositiu cap al PC, sense instal·lar-hi res), i també text i enllaços: enganxa'ls i surt un QR.</p>
+    </div>
+  </section>
+
+  <section id="sense-wifi" class="band">
+    <div class="wrap">
+      <p class="eyebrow">Sense cap Wi-Fi</p>
+      <h2>El PC crea la seva pròpia Wi-Fi.</h2>
+      <p class="intro">Les altres eines necessiten que els dos aparells siguin a la mateixa xarxa. QR Drop pot fer la xarxa ell mateix: no cal Internet ni cap altra connexió.</p>
+      <div class="places">
+        <div><h3>A la universitat</h3><p>Les xarxes de campus com eduroam aïllen els dispositius entre ells: encara que el PC i el mòbil siguin a la mateixa Wi-Fi, no es veuen. Amb la Wi-Fi del PC, sí.</p></div>
+        <div><h3>Al tren, a l'avió, a casa d'algú</h3><p>Sense demanar contrasenyes a ningú ni esperar que la Wi-Fi del lloc funcioni.</p></div>
+        <div><h3>A la muntanya</h3><p>Sense cobertura i sense res: la ràdio Wi-Fi del portàtil és tot el que cal.</p></div>
+      </div>
+      <p class="how">La primera vegada, l'altre dispositiu s'hi connecta escanejant un QR (el nom i la contrasenya de la xarxa van dins el codi). Les següents, s'hi connecta sol. Quan l'apagues, la Wi-Fi del PC desapareix.</p>
+    </div>
+  </section>
+
+  <section id="preu">
+    <div class="wrap">
+      <p class="eyebrow">Què és gratis i què no</p>
+      <h2>Gratis a la mateixa Wi-Fi. Nou euros per tot el que hi ha més enllà.</h2>
+      <div class="plans">
+        <div class="plan">
+          <div class="name">Gratis</div>
+          <div class="price">0 €<small>per sempre</small></div>
+          <ul>
+            <li>Fitxers d'un en un, fins a 250 MB cadascun</li>
+            <li>Text i enllaços, en els dos sentits</li>
+            <li>A la mateixa Wi-Fi (casa, feina, un router qualsevol)</li>
+            <li>Clic dret → Envia a → QR Drop</li>
+            <li>Sense límit de fitxers ni de vegades, sense registre</li>
+          </ul>
+          <a class="btn ghost" href="https://github.com/processaistudio/qrdrop/releases/download/v1.0.0/QRDrop-Setup-1.0.0.exe">Descarrega</a>
+          <p class="note">Gratis vol dir gratis: sense prova que caduqui ni funcions que desapareguin.</p>
+        </div>
+        <div class="plan pro">
+          <div class="name">Complet</div>
+          <div class="price">9 €<small>un sol cop, per ordinador</small></div>
+          <ul>
+            <li>Tot el de gratis</li>
+            <li class="plus">La Wi-Fi del PC: sense cap connexió, a la uni, al tren, a la muntanya</li>
+            <li class="plus">Fitxers grans, fins a 2 GB (vídeos, projectes)</li>
+            <li class="plus">Carpetes senceres en un sol QR, arrossegant-les o amb el clic dret</li>
+            <li>Sense subscripció. Per sempre en aquell ordinador</li>
+          </ul>
+          <a class="btn" id="buy" href="#activacio">Compra el codi d'activació · 9 €</a>
+          <p class="note">Pagament amb targeta (Stripe). El codi arriba per correu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="activacio">
+    <div class="wrap">
+      <p class="eyebrow">Com s'activa</p>
+      <h2>Un codi lligat al teu ordinador.</h2>
+      <p class="intro">El codi d'activació es fa a mida del teu PC i no funciona en cap altre. No hi ha compte, ni contrasenya, ni res que caduqui.</p>
+      <ol class="steps">
+        <li><h3>Copia el codi de màquina</h3><p>A QR Drop, secció Activació: té aquesta forma, <span class="code">QRD-XXXX-XXXX-XXXX-XXXX</span>. El botó «Copia» el copia.</p></li>
+        <li><h3>Paga i enganxa'l</h3><p>Al pagament hi ha una casella «Codi de màquina». Enganxa-l'hi. És l'única dada que necessitem, a més del correu on enviar-te el codi.</p></li>
+        <li><h3>Rep el codi d'activació</h3><p>T'arriba per correu abans de 24 hores. Enganxa'l a Activació → Activa, i llest.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="privadesa">
+    <div class="wrap">
+      <p class="eyebrow">Privadesa</p>
+      <h2>Res surt del teu ordinador.</h2>
+      <div class="priv">
+        <div><h3>Sense núvol</h3><p>Els fitxers van del PC al dispositiu per la Wi-Fi, directament. No passen per cap servidor.</p></div>
+        <div><h3>Sense comptes</h3><p>Cap registre, cap correu per fer-lo servir. El codi d'activació es comprova dins el PC, també sense Internet.</p></div>
+        <div><h3>Sota control</h3><p>Cada fitxer compartit té un enllaç propi i el treus quan vols amb un clic. Tot queda en una carpeta teva.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="preguntes">
+    <div class="wrap">
+      <p class="eyebrow">Preguntes</p>
+      <h2>El que sol preguntar la gent.</h2>
+      <div class="faq">
+        <details><summary>En instal·lar, Windows diu «aplicació desconeguda».</summary><p>És l'avís que Windows ensenya a qualsevol programa d'un desenvolupador petit que no paga un certificat de signatura. Fes clic a «Més informació» i després a «Executa igualment». L'instal·lador no demana permisos d'administrador i es desinstal·la des d'Aplicacions, com qualsevol altre.</p></details>
+        <details><summary>Amb quins dispositius funciona?</summary><p>Amb qualsevol que tingui càmera i navegador: iPhone, iPad, Android, tauletes de tota mena, fins i tot un altre portàtil amb càmera. No cal instal·lar-hi res.</p></details>
+        <details><summary>Cal instal·lar res al mòbil o la tauleta?</summary><p>No. El fitxer s'obre al navegador i el deses on vulguis. Per enviar coses del dispositiu al PC, s'escaneja un QR i s'obre una pàgina per triar el fitxer.</p></details>
+        <details><summary>Puc provar el complet abans de pagar?</summary><p>No hi ha període de prova: el gratuït és complet en el que fa, i el que és de pagament (la Wi-Fi del PC, els fitxers grans i les carpetes) es paga un sol cop. Si després no et serveix, escriu-nos i t'ho tornem.</p></details>
+        <details><summary>He canviat d'ordinador. Haig de tornar a pagar?</summary><p>No. Escriu-nos amb el codi de màquina nou i el correu de la compra i t'enviem un altre codi d'activació.</p></details>
+        <details><summary>I si el PC no té Wi-Fi?</summary><p>Un ordinador de sobretaula sense targeta Wi-Fi pot fer servir QR Drop a la mateixa xarxa (per cable, amb el dispositiu a la Wi-Fi del mateix router), però no pot crear la seva pròpia Wi-Fi.</p></details>
+        <details><summary>Quina mida màxima té un fitxer?</summary><p>250 MB al gratuït (qualsevol PDF, presentació o lot de fotos hi cap de sobres); 2 GB al complet. La velocitat és la de la Wi-Fi: un PDF triga un segon; un vídeo llarg, el que trigaria a copiar-lo per la xarxa.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>QR Drop 1.0.0 · Windows 10 i 11</span>
+  <span><a href="mailto:">Escriu-nos</a> · Fet a Catalunya</span>
+</footer>
+
+</body>
+</html>
