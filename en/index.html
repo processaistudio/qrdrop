@@ -43,6 +43,7 @@ p{margin:0}
 .btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .fine{font-size:13px;color:var(--mute)}
+.fine.warn{max-width:46ch;border-left:2px solid var(--line);padding-left:10px}
 
 /* capçalera */
 .top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;border-bottom:1px solid var(--line)}
@@ -174,6 +175,7 @@ footer a{color:var(--mute)}
       <div class="cta">
         <a class="btn" href="https://qrdrop-app.netlify.app/dl/QRDrop-Setup-1.0.0.exe">Download for Windows</a>
         <span class="fine">Free · 29 MB · Nothing to install on the phone or tablet · No sign-up</span>
+        <span class="fine warn">When you open it, Windows will warn you (“unrecognized app”): click “More info” and then “Run anyway”.</span>
       </div>
     </div>
     <figure class="art">
