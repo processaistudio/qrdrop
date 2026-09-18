@@ -1,0 +1,9 @@
+{
+  "name": "qrdrop-web",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "nodemailer": "^7.0.0",
+    "stripe": "^18.0.0"
+  }
+}
