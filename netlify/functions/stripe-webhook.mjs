@@ -79,12 +79,8 @@ function lang(session) {
 }
 
 function compose(session, name, machine, code) {
-  const l = lang(session);
-  if (l) return { subject: TEXT[l].subject, text: TEXT[l].body(name, machine, code) };
-  return {
-    subject: `${TEXT.ca.subject} · ${TEXT.es.subject} · ${TEXT.en.subject}`,
-    text: [TEXT.ca, TEXT.es, TEXT.en].map((t) => t.body(name, machine, code)).join("\n\n————————————————\n\n"),
-  };
+  // Decisió 2026-09-18: el correu del codi sempre en anglès (un sol text per a tothom).
+  return { subject: TEXT.en.subject, text: TEXT.en.body(name, machine, code) };
 }
 
 export default async (req) => {
