@@ -103,7 +103,9 @@ export default async (req) => {
 
   const email = s.customer_details?.email;
   const name = s.customer_details?.name || (email || "").split("@")[0];
-  const raw = (s.custom_fields || []).find((f) => f.key === "codi_maquina")?.text?.value || "";
+  // El botó «Compra» de dins l'app passa el codi de màquina com a client_reference_id (el client no escriu res);
+  // el camp del checkout queda com a reserva per a qui compra des de la web.
+  const raw = s.client_reference_id || (s.custom_fields || []).find((f) => f.key === "codi_maquina")?.text?.value || "";
   const machine = raw.toUpperCase().replace(/\s+/g, "");
   const transport = nodemailer.createTransport({
     service: "gmail",
