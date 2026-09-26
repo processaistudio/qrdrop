@@ -19,7 +19,8 @@ function today() {
 
 export default async (req) => {
   const url = new URL(req.url);
-  const store = getStore("downloads");
+  // "strong": sense això, dues baixades seguides poden llegir el mateix valor i una es perd.
+  const store = getStore({ name: "downloads", consistency: "strong" });
 
   if (url.pathname === "/api/stats") {
     const key = process.env.STATS_KEY;
