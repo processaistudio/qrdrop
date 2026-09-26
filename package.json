@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "nodemailer": "^7.0.0",
+    "nodemailer": "^10.0.10",
     "stripe": "^18.0.0"
   }
 }
