@@ -25,6 +25,10 @@ export default async (req) => {
   if (url.pathname === "/api/stats") {
     const key = process.env.STATS_KEY;
     if (!key || url.searchParams.get("k") !== key) return new Response("no", { status: 403 });
+    if (url.searchParams.get("reset") === "1") {  // posar el comptador a zero (proves, o començar una campanya)
+      await store.setJSON("counts", { total: 0, days: {}, langs: {} });
+      return Response.json({ reset: true });
+    }
     const data = (await store.get("counts", { type: "json" })) || {};
     const days = data.days || {};
     return Response.json({
